@@ -8,6 +8,7 @@
 class Form{
     
     private $data = array();
+    private $files = array();
     private $fields;
     private $filters;
     private $method;
@@ -19,10 +20,12 @@ class Form{
     }
     
     public function getFilteredData(){
-        foreach($this->fields as $field){
-            $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
-            if($this->data[$field] === ""){
-                $this->data[$field] = null;
+        if(!$this->data){
+            foreach($this->fields as $field){
+                $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
+                if($this->data[$field] === ""){
+                    $this->data[$field] = null;
+                }
             }
         }
         return $this->data;
@@ -36,9 +39,10 @@ class Form{
         $file = $_FILES[$fieldname];
         $isValidFormat   = in_array($file['type'], $validformats);
         $isValidSize     = ($file['size'] <= $maxsize) ? true : false; 
-        if($isValidFormat && $isValidSize){
+        $error           = $file['error'];
+        if($isValidFormat && $isValidSize && !$error){
                $file['name'] = filter_var($file['name'], FILTER_SANITIZE_STRING);
-               $this->data["files"][] = $file;
+               $this->files[] = $file;
                return true;
         }
         return false;
@@ -47,10 +51,10 @@ class Form{
     //files needs to be filtered first
     public function saveUploadedFiles($dir){
         try{
-            if(!isset($this->data['files'])){
+            if(!$this->files){
                 throw new Exception("There are no files, have you filtered them?");
             }
-            foreach($this->data['files'] as $file){
+            foreach($this->files as $file){
                 $done = move_uploaded_file($file['tmp_name'], $dir.$file['name']);
                 return $done;
             }
