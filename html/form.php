@@ -3,7 +3,7 @@
  * AUTHOR: Antony Acosta
  * LAST EDIT: 2018-10-22
  */
-include_once CONFIG::PHPFOLDER."Form.class.php";
+include_once PHPFOLDER."Form.class.php";
 
 if($_POST){
     $fields = array("nome","idade","cidade","email");
