@@ -5,7 +5,7 @@
  */
 
 include_once 'config.php';
-$file = HTMLFOLDER.filer_input(INPUT_POST, 'page', FILTER_SANITIZE_STRING);
+$file = HTMLFOLDER.filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
 
 if(file_exists("$file.php")){
     include_once "$file.php";
