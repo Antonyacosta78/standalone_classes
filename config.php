@@ -1,7 +1,7 @@
 <?php
 /* PHP Config file parser
  * AUTHOR: Antony Acosta
- * LAST EDIT 2018-10-24
+ * LAST EDIT 2018-10-26
  */
 $ini = parse_ini_file("config.ini");
 

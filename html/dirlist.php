@@ -1,20 +1,16 @@
 <?php
 /* PHP File for listing contents of a directories
  * AUTHOR: Antony Acosta
- * LAST EDIT: 2018-10-23
+ * LAST EDIT: 2018-10-29
  */
 //define which dir
-$dir = ($_GET['dir']) ? filter_input(INPUT_GET, "dir", FILTER_SANITIZE_STRING) : __DIR__;
-//anything  inside the dir starting with this prefix will not be shown
-const PRIVATE_PREFIX = ".";
+include PHPFOLDER."Dirlist.class.php";
 
-$contents = array_filter(scandir($dir),function($e){
-    return strpos($e,PRIVATE_PREFIX) !== 0;
-});
 
-$dirpath = explode("/",$dir);
+$handler = new Dirlist(__DIR__);
+$handler->setPrivatePrefix(".");
+$title = $handler->getCurrentFolderName();
 
-$title = $dirpath[count($dirpath)-1];
 ?>
 
 <!DOCTYPE html>
@@ -27,9 +23,10 @@ $title = $dirpath[count($dirpath)-1];
         <title><?php echo $title; ?></title>
     </head>
     <body>
-        <?php foreach ($contents as $row): ?>
-            <a href="<?php echo $dir."/".$row; ?>"><?php echo $row; ?></a>
+        <?php foreach ($handler->getLinks() as $filename=>$link): ?>
+            <a href="<?php echo $link; ?>"><?php echo $filename; ?></a><br>
          <?php endforeach; ?>
+            
     </body>
     
 </html>

@@ -1,7 +1,7 @@
 <?php
 /* Page loader for standalone_classes repository
  * AUTHOR: Antony Acosta
- * LAST EDIT 2018-10-22
+ * LAST EDIT 2018-10-26
  */
 
 include_once 'config.php';

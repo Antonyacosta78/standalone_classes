@@ -1,7 +1,7 @@
 <?php
 /* HTML for testing purpose for CLASS Form.class.php
  * AUTHOR: Antony Acosta
- * LAST EDIT: 2018-10-22
+ * LAST EDIT: 2018-10-25
  */
 include_once PHPFOLDER."Form.class.php";
 
