@@ -40,6 +40,17 @@ class Cookie
 		return $list_of_cookies;
 	}
 
+	public static function getAllCookies()
+	{
+		$list_of_cookies = [];
+
+		foreach ($_COOKIE as $name => $value) {
+			$list_of_cookies[$name] = self::getCookie($name);
+		}
+
+		return $list_of_cookies;
+	}
+
 	public static function cookieExists($name)
 	{
 		return (filter_input(INPUT_COOKIE,$name))?true:false; 
