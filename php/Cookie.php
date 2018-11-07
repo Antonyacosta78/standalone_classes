@@ -56,4 +56,11 @@ class Cookie
 			self::destroyCookie($name);
 		}
 	}
+
+	public static function destroyAllCookies()
+	{
+		foreach ($_COOKIE as $name => $value) {
+			self::destroyCookie($name);
+		}
+	}
 }
