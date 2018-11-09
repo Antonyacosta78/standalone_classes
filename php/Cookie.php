@@ -5,16 +5,16 @@
  */
 class Cookie 
 {
-	private static $time;
+	private $time;
 
 	public function __construct()
 	{
-		self::$time = time() + 1*86400;
+		$this->time = time() + 1*86400;
 	}
 
 	public static function setCookie($name, $value)
 	{
-		setcookie($name, $value, self::$time,'/');
+		setcookie($name, $value, (new self)->time,'/');
 	}
 
 	public static function setCookies(Array $cookies)
@@ -34,17 +34,6 @@ class Cookie
 		$list_of_cookies = [];
 
 		foreach ($cookies as $name) {
-			$list_of_cookies[$name] = self::getCookie($name);
-		}
-
-		return $list_of_cookies;
-	}
-
-	public static function getAllCookies()
-	{
-		$list_of_cookies = [];
-
-		foreach ($_COOKIE as $name => $value) {
 			$list_of_cookies[$name] = self::getCookie($name);
 		}
 
@@ -74,4 +63,5 @@ class Cookie
 			self::destroyCookie($name);
 		}
 	}
+	
 }
