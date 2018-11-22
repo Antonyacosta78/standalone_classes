@@ -1,7 +1,7 @@
 <?php
 /* PHP Class for filtering and retriving information from forms
  * AUTHOR: Antony Acosta
- * LAST EDIT: 2018-10-22
+ * LAST EDIT: 2018-11-22
  */
 
 
@@ -13,13 +13,15 @@ class Form{
     private $filters;
     private $method;
     
-    public function __construct(array $fields, array $filters, $method = INPUT_POST){
+    public function __construct(array $fields = [], array $filters = [], $method = INPUT_POST)
+    {
         $this->fields   = $fields;
         $this->filters  = $filters;
         $this->method   = $method;
     }
     
-    public function getFilteredData(){
+    public function getFilteredData()
+    {
         if(!$this->data){
             foreach($this->fields as $field){
                 $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
@@ -31,11 +33,23 @@ class Form{
         return $this->data;
     }
     
-    public function checkEmptyFields(){
+    public function setFields(array $fields)
+    {
+        $this->fields = $fields;
+    }
+    
+    public function setFilters(array $filters)
+    {
+        $this->filters = $filters;
+    }
+    
+    public function checkEmptyFields()
+    {
         return (in_array(null,$this->data)) ? true : false;
     }
     
-    public function filterSingleFile($fieldname, array $validformats, $maxsize = 1048576){
+    public function filterSingleFile($fieldname, array $validformats, $maxsize = 1048576)// 1MB
+    {
         $file = $_FILES[$fieldname];
         $isValidFormat   = in_array($file['type'], $validformats);
         $isValidSize     = ($file['size'] <= $maxsize) ? true : false; 
@@ -49,7 +63,8 @@ class Form{
     }
     
     //files needs to be filtered first
-    public function saveUploadedFiles($dir){
+    public function saveUploadedFiles($dir)
+    {
         try{
             if(!$this->files){
                 throw new Exception("There are no files, have you filtered them?");
