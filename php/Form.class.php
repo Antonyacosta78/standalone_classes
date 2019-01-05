@@ -1,7 +1,7 @@
 <?php
 /* PHP Class for filtering and retriving information from forms
  * AUTHOR: Antony Acosta
- * LAST EDIT: 2018-11-22
+ * LAST EDIT: 2018-10-22
  */
 
 
@@ -13,43 +13,40 @@ class Form{
     private $filters;
     private $method;
     
-    public function __construct(array $fields = [], array $filters = [], $method = INPUT_POST)
-    {
-        $this->fields   = $fields;
-        $this->filters  = $filters;
+    public function __construct(array $data, $method = INPUT_POST){
+        $this->fields   = array_keys($data);
+        $this->filters  = $data;
         $this->method   = $method;
     }
     
-    public function getFilteredData()
-    {
+    public function getFilteredData(){
         if(!$this->data){
             foreach($this->fields as $field){
-                $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
-                if($this->data[$field] === ""){
-                    $this->data[$field] = null;
+                
+                if(is_callable($this->filters[$field])){
+                    $this->data[$field] = $this->filters[$field]($field);
+                    
+                }elseif(defined($this->filters[$field])){
+                    $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
+                    
+                    if($this->data[$field] === ""){
+                        $this->data[$field] = null;
+                    }
                 }
             }
         }
         return $this->data;
     }
     
-    public function setFields(array $fields)
-    {
-        $this->fields = $fields;
+    public function getEmptyFields(){
+        return array_keys(
+                array_filter($this->data,function($e){
+                    return $e === null;
+                })
+         );
     }
     
-    public function setFilters(array $filters)
-    {
-        $this->filters = $filters;
-    }
-    
-    public function checkEmptyFields()
-    {
-        return (in_array(null,$this->data)) ? true : false;
-    }
-    
-    public function filterSingleFile($fieldname, array $validformats, $maxsize = 1048576)// 1MB
-    {
+    public function filterSingleFile($fieldname, array $validformats, $maxsize = 1048576){
         $file = $_FILES[$fieldname];
         $isValidFormat   = in_array($file['type'], $validformats);
         $isValidSize     = ($file['size'] <= $maxsize) ? true : false; 
@@ -63,8 +60,7 @@ class Form{
     }
     
     //files needs to be filtered first
-    public function saveUploadedFiles($dir)
-    {
+    public function saveUploadedFiles($dir){
         try{
             if(!$this->files){
                 throw new Exception("There are no files, have you filtered them?");
@@ -78,4 +74,5 @@ class Form{
         }
         
     }
+    
 }
