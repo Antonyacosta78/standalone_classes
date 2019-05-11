@@ -22,16 +22,10 @@ class Form{
     public function getFilteredData(){
         if(!$this->data){
             foreach($this->fields as $field){
+                $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
                 
-                if(is_callable($this->filters[$field])){
-                    $this->data[$field] = $this->filters[$field]($field);
-                    
-                }elseif(defined($this->filters[$field])){
-                    $this->data[$field] = filter_input($this->method, $field, $this->filters[$field]);
-                    
-                    if($this->data[$field] === ""){
-                        $this->data[$field] = null;
-                    }
+                if($this->data[$field] === ""){
+                    $this->data[$field] = null;
                 }
             }
         }
